@@ -4,14 +4,14 @@ const router = express.Router();
 // Assign required controller to respective route.
 import controller from "../Controller/contollerResource.js"
 
-// Destructure constituting controllers
-const { getController, validateRuleController } = controller;
+// Destructure constituting controllers.
+const { getController, validationController } = controller;
 
-// Route for get
+// Route for get.
 router.get("/", getController)
 
-// Route for validation
-router.post("/validate-rule", validateRuleController)
+// Route for validation.
+router.post("/validate-rule", validationController)
 
 
 export default router;
