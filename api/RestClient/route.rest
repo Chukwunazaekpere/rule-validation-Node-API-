@@ -1,0 +1,5 @@
+POST http://localhost:7000/validate-rule
+
+
+
+GET http://localhost:7000/
