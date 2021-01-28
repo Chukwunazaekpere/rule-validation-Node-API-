@@ -29,24 +29,67 @@ const validationController = (req, res) =>{
     // respective field - values were passed as intended and has been parsed for validation as to the 
     // condiitons of; data - type, emptiness etc
 
-    // ========================== Step two =========================
+    // console.log("\n\t After validation ");
 
-    // Thus the next validation centres on value property of "field" and "condition_value"
-    
+    // ========================== Step two =========================
+    // Check if "field" is dotted in rule
+    const ruleField = rule['field']
     const conditionValue = rule["condition_value"]
+    try{
+        // Try splitting to see if the rule - field is dotted.
+        const dataField = ruleField.split(".")[0]
+        const dataFieldValue = ruleField.split(".")[1]
+        if( dataFieldValue !== undefined ){
+            try{
+                // If the rule - field is dotted, check if such field as well as its property 
+                // is present in the Data - field
+                const valueInDataProp = data[dataField][dataFieldValue]
+                console.log("\n\t val in data prop: ", valueInDataProp);
+
+                if(valueInDataProp){
+                    throw res.status(200).json({
+                        "message": `field ${ruleField} successfully validated.`,
+                        "status": "success",
+                        "data": {
+                            "validation": {
+                                "error": false,
+                                "field": `${ruleField}`,
+                                "field_value": `${valueInDataProp}`,
+                                "condition": `${rule['condition']}`,
+                                "condition_value": `${rule['condition_value']}`
+                            }
+                        }
+                    })
+                }else{
+                    const error = `${"Data"} property does not contain either ${dataField} or ${dataFieldValue} property as passed in the ${"Rule"} property.`
+                    throw res.status(400).json({
+                        "message": `${error}`,
+                        "status": "error",
+                        "data": null
+                    })
+                }
+            
+            }finally{
+
+            }
+        }
+    }finally{
+
+    }
+    // Thus the next validation centres on value property of "field" and "condition_value"
     const field = rule["field"]
     const fieldValue = data[field]
 
     const comparatorResult = comparator(rule['condition'], fieldValue, conditionValue)
 
     if(comparatorResult){
-        res.status(200).json({
-            "message": `field ${field} successfully validated.`,
+        throw res.status(200).json({
+            "message": `field ${ruleField} successfully validated.`,
             "status": "success",
             "data": {
                 "validation": {
                     "error": false,
-                    "field": `${field}`,
+                    "field": `${ruleField}`,
                     "field_value": `${fieldValue}`,
                     "condition": `${rule['condition']}`,
                     "condition_value": `${conditionValue}`
@@ -68,8 +111,8 @@ const validationController = (req, res) =>{
             }
         })
     }
-// iv/ gte: Means the field value should be greater than or equal to the condition value 
 }
+
 
 
 
@@ -101,10 +144,11 @@ const isRuleDataValid = (res, rule, data) => {
         // -------------------------------------------------------------------------------
 
             // Validate payload fields
-            const acceptedRuleFields = ["field", "condition", "condition_value"]
-            const acceptedDataFields = ["name", "crew", "age", "position", "missions"]
             const ruleFieldsPassed = Object.keys(rule)
             const dataFieldsPassed = Object.keys(data)
+            const ruleFieldProp = rule['field'].split(".")[0]
+            const acceptedRuleFields = ["field", "condition", "condition_value"]
+            const acceptedDataFields = ["name", "crew", "age", "position", ruleFieldProp]
 
         // ===================================== Rule - field validation ======================= //
             // Check for needless fields in rule.
@@ -150,7 +194,7 @@ const isRuleDataValid = (res, rule, data) => {
                 index++
             })
 
-        // ===================================== Data - field validation ======================= //
+        // ===================================== Data field - value validation ======================= //
             // Check for needless fields in data
             if(dataFieldsPassed.length > acceptedDataFields.length){
                 let error = `Needless fields passed in data.`
@@ -168,16 +212,17 @@ const isRuleDataValid = (res, rule, data) => {
             // Individual field - type validation for data. As above, we ensure that the required fields in "data"
             // contain the desired data - type.
             index = 0
+            console.log(ruleFieldProp);
             dataFieldsPassed.forEach(field => {
                 const fieldValueType = typeof(data[field])
-                const fieldValue = data[field]
-
-                if((field === 'age' || field === "missions") && fieldValueType !== "number"){
-                    let error = `The field; ${acceptedDataFields[index]}, in data, must be of number - type. You passed a/an ${fieldValueType}.`;
+                
+                if((field === 'name' || field === "position" || field === "crew") && fieldValueType !== "string"){
+                    let error = `The field; ${acceptedDataFields[index]}, in data, must be of string - type. You passed a/an ${fieldValueType}.`;
                     throw error
+
                 }else{
-                    if((field !== 'age' || field !== "missions") && fieldValueType !== "string"){
-                        let error = `The field; ${acceptedDataFields[index]}, in data, must be of string - type. You passed a/an ${fieldValueType}.`;
+                    if (field === "age" && fieldValueType !== "number"){
+                        let error = `There are irregularities with either the age or ${ruleFieldProp} field, in data. The age field must be of number - type. Then, either an object or a number - type for the ${ruleFieldProp} field.`;
                         throw error
                     }
                 }

@@ -17,11 +17,17 @@ try {
     
 }
 
-const possibleConditions = {
-    eq: '===',
-    neq: '!==',
-    gt: '>',
-    gte: '>=',
+const g = {
+    family: {
+        mum: {
+            name: "Cecilia"
+        }
+    }
 }
+let y = 'family.mum'
+try{
+    let r = g['family']['mum']
+    console.log(r);
+}finally{
 
-console.log(possibleConditions['eq']);
+}

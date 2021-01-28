@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
   "rule": {
-    "field": "missions",
+    "field": "missions.count",
     "condition": "gte",
     "condition_value": 30
   },
@@ -19,9 +19,12 @@ Content-Type: application/json
     "crew": "Rocinante",
     "age": 34,
     "position": "Captain",
-    "missions": 45
+    "missions": {
+      "count": 45,
+      "successful": 44,
+      "failed": 1
+    }
   }
 }
-
 
 # Tweak the data provided to certify endpoints' strength.
