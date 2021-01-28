@@ -34,32 +34,23 @@ const validationController = (req, res) =>{
     // ========================== Step two =========================
     // Check if "field" is dotted in rule
     const ruleField = rule['field']
-    const conditionValue = rule["condition_value"]
+    const field = rule["field"]
+    const fieldValue = data[field]
     try{
         // Try splitting to see if the rule - field is dotted.
-        const dataField = ruleField.split(".")[0]
-        const dataFieldValue = ruleField.split(".")[1]
-        if( dataFieldValue !== undefined ){
+        const dataField = rule['field'].split(".")[0]
+        const dataFieldValue = rule['field'].split(".")[1]
+        if( dataFieldValue !== undefined ){ // The rule - field is dotted
             try{
-                // If the rule - field is dotted, check if such field as well as its property 
+                // If the rule - field is dotted, check if such field, as well as its property 
                 // is present in the Data - field
                 const valueInDataProp = data[dataField][dataFieldValue]
-
                 if(valueInDataProp){
-                    throw res.status(200).json({
-                        "message": `field ${ruleField} successfully validated.`,
-                        "status": "success",
-                        "data": {
-                            "validation": {
-                                "error": false,
-                                "field": `${ruleField}`,
-                                "field_value": `${valueInDataProp}`,
-                                "condition": `${rule['condition']}`,
-                                "condition_value": `${rule['condition_value']}`
-                            }
-                        }
-                    })
+                    // The data - field has a correspodinng field as the rule - field.
+                    const comparatorResult = comparator(rule['condition'], valueInDataProp, rule["condition_value"])
+                    controllerResponse(comparatorResult, rule, valueInDataProp, res)
                 }else{
+                    // The data - field does't have a correspodinng field as the rule - field.
                     const error = `${"Data"} property does not contain either ${dataField} or ${dataFieldValue} property as passed in the ${"Rule"} property.`
                     throw res.status(400).json({
                         "message": `${error}`,
@@ -71,48 +62,48 @@ const validationController = (req, res) =>{
             }finally{
 
             }
+        }else{
+            // The rule - field isn't dotted.
+            const comparatorResult = comparator(rule['condition'], fieldValue, rule['condition_value'])
+            controllerResponse(comparatorResult, rule, fieldValue, res)
         }
-    }finally{
-
+    }catch{
     }
-    // Thus the next validation centres on value property of "field" and "condition_value"
-    const field = rule["field"]
-    const fieldValue = data[field]
+    
+}
 
-    const comparatorResult = comparator(rule['condition'], fieldValue, conditionValue)
 
-    if(comparatorResult){
+const controllerResponse = (boolValue, rule, fieldValue, res) => {
+    if(boolValue){
         throw res.status(200).json({
-            "message": `field ${ruleField} successfully validated.`,
+            "message": `field ${rule['field']} successfully validated.`,
             "status": "success",
             "data": {
                 "validation": {
                     "error": false,
-                    "field": `${ruleField}`,
+                    "field": `${rule['field']}`,
                     "field_value": `${fieldValue}`,
                     "condition": `${rule['condition']}`,
-                    "condition_value": `${conditionValue}`
+                    "condition_value": `${rule['condition_value']}`
                 }
             }
         })
     }else{
         res.status(400).json({
-            "message": `field ${field} failed validation.`,
+            "message": `field ${rule['field']} failed validation.`,
             "status": "error",
             "data": {
                 "validation": {
                     "error": true,
-                    "field": `${field}`,
+                    "field": `${rule['field']}`,
                     "field_value": `${fieldValue}`,
                     "condition": `${rule['condition']}`,
-                    "condition_value": `${conditionValue}`
+                    "condition_value": `${rule['condition_value']}`
                 }
             }
         })
     }
 }
-
-
 
 
 const isRuleDataValid = (res, rule, data) => {
@@ -238,7 +229,7 @@ const isRuleDataValid = (res, rule, data) => {
           })
     }
     
-    
+
 }
 
 const comparator = (eqSign, fieldValue, conditionValue) => {
