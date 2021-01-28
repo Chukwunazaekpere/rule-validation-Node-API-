@@ -44,7 +44,6 @@ const validationController = (req, res) =>{
                 // If the rule - field is dotted, check if such field as well as its property 
                 // is present in the Data - field
                 const valueInDataProp = data[dataField][dataFieldValue]
-                console.log("\n\t val in data prop: ", valueInDataProp);
 
                 if(valueInDataProp){
                     throw res.status(200).json({
@@ -238,7 +237,7 @@ const isRuleDataValid = (res, rule, data) => {
             "data": null
           })
     }
-    console.log("\n\t Done validating...");
+    
 }
 
 const comparator = (eqSign, fieldValue, conditionValue) => {
