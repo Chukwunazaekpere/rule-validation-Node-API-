@@ -42,12 +42,14 @@ const validationController = (req, res) =>{
         const dataFieldValue = rule['field'].split(".")[1]
         if( dataFieldValue !== undefined ){ // The rule - field is dotted
             try{
-                // If the rule - field is dotted, check if such field, as well as its property 
+                // If the rule - field is dotted, check if such field, as well as its property,
                 // is present in the Data - field
                 const valueInDataProp = data[dataField][dataFieldValue]
                 if(valueInDataProp){
                     // The data - field has a correspodinng field as the rule - field.
                     const comparatorResult = comparator(rule['condition'], valueInDataProp, rule["condition_value"])
+                    // call the cotroller response to assert the field validation based on the
+                    // rule - condition-value.
                     controllerResponse(comparatorResult, rule, valueInDataProp, res)
                 }else{
                     // The data - field does't have a correspodinng field as the rule - field.
@@ -68,6 +70,8 @@ const validationController = (req, res) =>{
             controllerResponse(comparatorResult, rule, fieldValue, res)
         }
     }catch{
+        // We won't be catching any error here; since we just want to ascertain if 
+        // the "rule-field" is dotted or not; which does not connote an error
     }
     
 }
