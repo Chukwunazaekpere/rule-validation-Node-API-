@@ -1,4 +1,9 @@
 
+/**
+ * 
+ * @param {*} req : the http request object
+ * @param {*} res : the http response object
+ */
 const getController = (req, res) =>{
     const basicInfo = {
     "name": "Chukwunazaekpere Obioma",
@@ -19,6 +24,11 @@ const getController = (req, res) =>{
 }
 
 
+/**
+ * 
+ * @param {*} req : the http request object
+ * @param {*} res : the http response object
+ */
 const validationController = (req, res) =>{
     const { rule, data } = req.body
 
@@ -32,10 +42,10 @@ const validationController = (req, res) =>{
     // console.log("\n\t After validation ");
 
     // ========================== Step two =========================
-    // Check if "field" is dotted in rule
-    const ruleField = rule['field']
     const field = rule["field"]
     const fieldValue = data[field]
+
+    // Check if "field" is dotted in rule
     try{
         // Try splitting to see if the rule - field is dotted.
         const dataField = rule['field'].split(".")[0]
@@ -76,7 +86,13 @@ const validationController = (req, res) =>{
     
 }
 
-
+/**
+ * 
+ * @param {*} boolValue: the comparison value based on the "rule['condition-value']"
+ * @param {*} rule : all fields of the rule - property.
+ * @param {*} fieldValue : the corresponding data - field-value as the rule-field-value
+ * @param {*} res : the response object
+ */
 const controllerResponse = (boolValue, rule, fieldValue, res) => {
     if(boolValue){
         throw res.status(200).json({
@@ -109,6 +125,12 @@ const controllerResponse = (boolValue, rule, fieldValue, res) => {
     }
 }
 
+/**
+ * 
+ * @param {*} res : the http response object
+ * @param {*} rule : all fields of the rule - property.
+ * @param {*} data : all fields of the data - property.
+ */
 
 const isRuleDataValid = (res, rule, data) => {
     try {
@@ -235,6 +257,13 @@ const isRuleDataValid = (res, rule, data) => {
     
 
 }
+
+/**
+ * 
+ * @param {*} eqSign : the rule['condition']
+ * @param {*} fieldValue : the corresponding data - field-value as the rule-field-value
+ * @param {*} conditionValue : the rule['condition_value']
+ */
 
 const comparator = (eqSign, fieldValue, conditionValue) => {
     switch(eqSign){
