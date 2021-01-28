@@ -23,4 +23,5 @@ Content-Type: application/json
   }
 }
 
+
 # Tweak the data provided to certify endpoints' strength.

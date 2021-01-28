@@ -10,8 +10,5 @@ app.use(express.json())
 app.use(apiRouter)
 
 
-
-
-
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server started and running at port: ${PORT}`))

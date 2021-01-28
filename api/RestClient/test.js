@@ -1,13 +1,27 @@
 
 let k = {
-    food: 'rice',
+    food: 'error',
     home: '',
     flour: 'wheat'
 }
 
-let ty = ['r', 'w', 'q', 'a']
 
-if(!ty.includes('a')){
-    console.log("not found");
+try {
+    if(k === 5){
+        console.log("unknown");
+    }
+    let error = "hmmm"
+    throw error
+} catch (error) {
+    // console.log("Not String!", error);
+    
 }
-// console.log(m);
+
+const possibleConditions = {
+    eq: '===',
+    neq: '!==',
+    gt: '>',
+    gte: '>=',
+}
+
+console.log(possibleConditions['eq']);
