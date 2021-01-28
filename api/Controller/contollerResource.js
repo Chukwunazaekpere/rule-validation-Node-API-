@@ -228,7 +228,6 @@ const isRuleDataValid = (res, rule, data) => {
             // Individual field - type validation for data. As above, we ensure that the required fields in "data"
             // contain the desired data - type.
             index = 0
-            console.log(ruleFieldProp);
             dataFieldsPassed.forEach(field => {
                 const fieldValueType = typeof(data[field])
                 
