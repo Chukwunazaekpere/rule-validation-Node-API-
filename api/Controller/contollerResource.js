@@ -238,6 +238,7 @@ const isRuleDataValid = (res, rule, data) => {
           })
     }
     
+    
 }
 
 const comparator = (eqSign, fieldValue, conditionValue) => {
