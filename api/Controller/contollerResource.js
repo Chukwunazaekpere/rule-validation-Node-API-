@@ -8,13 +8,13 @@ const getController = (req, res) =>{
     const basicInfo = {
     "name": "Chukwunazaekpere Obioma",
     "github": "@Chukwunazaekpere",
-    "email": "emmanuelchinaza5777@gmail.com",
+    "email": "ceo.naza.tech@gmail.com",
     "mobile": "0816-954-7035",
     "twitter": "No registered twitter account"
     }
 
     const surname = basicInfo['name'].split(" ")[1];
-    res.status(200).json({
+    return res.status(200).json({
         "message": `${surname}'s Basic Info`,
         "status": "success",
         "data": {
@@ -243,8 +243,6 @@ const isRuleDataValid = (res, rule, data) => {
                 }
                 index++
             })
-           
-
         }
     }catch(error) {
         throw res.status(400).json({
@@ -263,7 +261,6 @@ const isRuleDataValid = (res, rule, data) => {
  * @param {*} fieldValue : the corresponding data - field-value as the rule-field-value
  * @param {*} conditionValue : the rule['condition_value']
  */
-
 const comparator = (eqSign, fieldValue, conditionValue) => {
     switch(eqSign){
         case 'eq':
@@ -277,7 +274,7 @@ const comparator = (eqSign, fieldValue, conditionValue) => {
         case 'contains':
             return fieldValue.includes(conditionValue)
         default:
-            // Default not needed due to prior validatio before callinng the 
+            // Default not needed due to prior validation before calling the 
             // "comparator" function
     }
 }

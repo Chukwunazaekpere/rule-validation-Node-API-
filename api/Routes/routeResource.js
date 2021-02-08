@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-// Assign required controller to respective route.
+// import the required controller for the respective routes
 import controller from "../Controller/contollerResource.js"
 
 // Destructure constituting controllers.
